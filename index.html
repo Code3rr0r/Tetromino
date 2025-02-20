@@ -51,11 +51,7 @@
 
         let board = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(null));
         let currentTetromino, tetrominoX, tetrominoY;
-        let isMovingDown = false;
         let score = 0;
-
-        const moveSpeed = 300; // Initial falling speed (in ms)
-        let lastMoveTime = 0;
 
         function randomTetromino() {
             const idx = Math.floor(Math.random() * tetrominos.length);
@@ -123,8 +119,16 @@
             const originalTetromino = currentTetromino.shape;
             currentTetromino.shape = rotated;
 
+            // Check for collision after rotation
             if (collide()) {
                 currentTetromino.shape = originalTetromino;
+            }
+        }
+
+        function fullRotateTetromino() {
+            // Rotate 90 degrees in total
+            for (let i = 0; i < 4; i++) {
+                rotateTetromino();
             }
         }
 
@@ -175,11 +179,6 @@
         }
 
         function update(timestamp) {
-            if (timestamp - lastMoveTime > moveSpeed) {
-                moveTetromino(0, 1);
-                lastMoveTime = timestamp;
-            }
-
             drawBoard();
             drawTetromino();
             // Display score
@@ -189,8 +188,9 @@
         }
 
         function gameLoop(timestamp) {
+            moveTetromino(0, 1);
             update(timestamp);
-            requestAnimationFrame(gameLoop); // Calls itself to continue the loop
+            setTimeout(gameLoop, 500); // Falling speed
         }
 
         document.addEventListener("keydown", (event) => {
@@ -203,14 +203,14 @@
             } else if (event.key === "ArrowUp" || event.key === "w" || event.key === "W") {
                 moveTetromino(0, -1); // Move up
             } else if (event.key === " " || event.key === "Space") {
-                rotateTetromino(); // Rotate Tetromino
+                fullRotateTetromino(); // Full rotate Tetromino (rotate 360 degrees)
             } else if (event.key === "Escape") {
                 resetGame(); // Restart the game
             }
         });
 
         resetGame();
-        requestAnimationFrame(gameLoop); // Start the game loop
+        gameLoop();
     </script>
 </body>
 </html>
