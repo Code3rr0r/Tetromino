@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetromino</title> <!-- Changed title here -->
+    <title>Tetromino</title>
     <style>
         body {
             display: flex;
@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-    <h1>Tetromino</h1> <!-- Heading with the title -->
+    <h1>Tetromino</h1>
     <canvas id="tetris" width="300" height="600"></canvas>
     <script>
         const canvas = document.getElementById("tetris");
@@ -51,6 +51,10 @@
 
         let board = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(null));
         let currentTetromino, tetrominoX, tetrominoY;
+        let isMovingDown = false;
+
+        const moveSpeed = 300; // Initial falling speed (in ms)
+        let lastMoveTime = 0;
 
         function randomTetromino() {
             const idx = Math.floor(Math.random() * tetrominos.length);
@@ -151,15 +155,19 @@
             drawTetromino();
         }
 
-        function update() {
+        function update(timestamp) {
+            if (timestamp - lastMoveTime > moveSpeed) {
+                moveTetromino(0, 1);
+                lastMoveTime = timestamp;
+            }
+
             drawBoard();
             drawTetromino();
         }
 
-        function gameLoop() {
-            moveTetromino(0, 1);
-            update();
-            setTimeout(gameLoop, 500);
+        function gameLoop(timestamp) {
+            update(timestamp);
+            requestAnimationFrame(gameLoop); // Calls itself to continue the loop
         }
 
         document.addEventListener("keydown", (event) => {
@@ -177,7 +185,7 @@
         });
 
         resetGame();
-        gameLoop();
+        requestAnimationFrame(gameLoop); // Start the game loop
     </script>
 </body>
 </html>
