@@ -181,6 +181,8 @@
                 moveTetromino(0, -1); // Move up
             } else if (event.key === " " || event.key === "Space") {
                 rotateTetromino(); // Rotate Tetromino
+            } else if (event.key === "Escape") {
+                resetGame(); // Restart the game
             }
         });
 
