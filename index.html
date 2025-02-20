@@ -52,6 +52,7 @@
         let board = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(null));
         let currentTetromino, tetrominoX, tetrominoY;
         let isMovingDown = false;
+        let score = 0;
 
         const moveSpeed = 300; // Initial falling speed (in ms)
         let lastMoveTime = 0;
@@ -135,6 +136,7 @@
                 tetrominoY -= dy;
                 if (dy !== 0) {
                     mergeTetromino();
+                    clearLines();
                     currentTetromino = randomTetromino();
                     tetrominoX = Math.floor(COLUMNS / 2) - 1;
                     tetrominoY = 0;
@@ -146,11 +148,28 @@
             }
         }
 
+        function clearLines() {
+            let linesCleared = 0;
+            for (let y = ROWS - 1; y >= 0; y--) {
+                if (board[y].every(cell => cell !== null)) {
+                    linesCleared++;
+                    board.splice(y, 1);
+                    board.unshift(Array(COLUMNS).fill(null)); // Add an empty row at the top
+                }
+            }
+            if (linesCleared > 0) {
+                score += linesCleared * 100; // Increase score by 100 per cleared line
+                console.log('Lines cleared:', linesCleared);
+                console.log('Score:', score);
+            }
+        }
+
         function resetGame() {
             board = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(null));
             currentTetromino = randomTetromino();
             tetrominoX = Math.floor(COLUMNS / 2) - 1;
             tetrominoY = 0;
+            score = 0;
             drawBoard();
             drawTetromino();
         }
@@ -163,6 +182,10 @@
 
             drawBoard();
             drawTetromino();
+            // Display score
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText('Score: ' + score, 10, 30);
         }
 
         function gameLoop(timestamp) {
