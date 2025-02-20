@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetromino</title>
+    <title>Tetromino</title> <!-- Changed title here -->
     <style>
         body {
             display: flex;
@@ -25,8 +25,8 @@
     </style>
 </head>
 <body>
-    <h1>Tetromino</h1>
-    <canvas id="Tetromino" width="300" height="600"></canvas>
+    <h1>Tetromino</h1> <!-- Heading with the title -->
+    <canvas id="tetris" width="300" height="600"></canvas>
     <script>
         const canvas = document.getElementById("tetris");
         const ctx = canvas.getContext("2d");
@@ -163,14 +163,16 @@
         }
 
         document.addEventListener("keydown", (event) => {
-            if (event.key === "ArrowLeft") {
-                moveTetromino(-1, 0);
-            } else if (event.key === "ArrowRight") {
-                moveTetromino(1, 0);
-            } else if (event.key === "ArrowDown") {
-                moveTetromino(0, 1);
-            } else if (event.key === "ArrowUp") {
-                rotateTetromino();
+            if (event.key === "ArrowLeft" || event.key === "a" || event.key === "A") {
+                moveTetromino(-1, 0); // Move left
+            } else if (event.key === "ArrowRight" || event.key === "d" || event.key === "D") {
+                moveTetromino(1, 0); // Move right
+            } else if (event.key === "ArrowDown" || event.key === "s" || event.key === "S") {
+                moveTetromino(0, 1); // Move down
+            } else if (event.key === "ArrowUp" || event.key === "w" || event.key === "W") {
+                moveTetromino(0, -1); // Move up
+            } else if (event.key === " " || event.key === "Space") {
+                rotateTetromino(); // Rotate Tetromino
             }
         });
 
